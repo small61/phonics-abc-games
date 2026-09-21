@@ -32,7 +32,7 @@ dialog{border:0;border-radius:26px;padding:0;width:min(92vw,560px);box-shadow:0 
 <script>
 (()=>{'use strict';
 const defaults={A:[['apple','🍎'],['ant','🐜'],['alligator','🐊'],['ax','🪓']],B:[['bear','🐻'],['bird','🐦'],['bed','🛏️'],['banana','🍌']],C:[['cat','🐱'],['cup','☕'],['car','🚗'],['computer','💻']]};
-const recordings={apple:'audio-child-v3/a-apple.mp3',ant:'audio-child-v3/a-ant.mp3',alligator:'audio-child-v3/a-alligator.mp3',ax:'audio-child-v3/a-ax.mp3',bear:'audio-child-v3/b-bear.mp3',bird:'audio-child-v3/b-bird.mp3',bed:'audio-child-v3/b-bed.mp3',banana:'audio-child-v3/b-banana.mp3',cat:'audio-child-v3/c-cat.mp3',cup:'audio-child-v3/c-cup.mp3',car:'audio-child-v3/c-car.mp3',computer:'audio-child-v3/c-computer.mp3'};
+const recordings={apple:'audio-child-v4/a-apple.mp3',ant:'audio-child-v4/a-ant.mp3',alligator:'audio-child-v4/a-alligator.mp3',ax:'audio-child-v4/a-ax.mp3',bear:'audio-child-v4/b-bear.mp3',bird:'audio-child-v4/b-bird.mp3',bed:'audio-child-v4/b-bed.mp3',banana:'audio-child-v4/b-banana.mp3',cat:'audio-child-v4/c-cat.mp3',cup:'audio-child-v4/c-cup.mp3',car:'audio-child-v4/c-car.mp3',computer:'audio-child-v4/c-computer.mp3'};
 const $=s=>document.querySelector(s),board=$('#board'),feedback=$('#feedback');let unit='A',words=load('A'),target=0,stars=0,slow=true,locked=false,timer=0,voices=[],questionBag=[],lastTarget=null,currentAudio=null;
 function load(u){try{const x=JSON.parse(localStorage.getItem('phonics-adventure-'+u));if(Array.isArray(x)&&x.length===4&&x.every(v=>v.word))return x}catch(_){}return defaults[u].map(x=>({word:x[0],emoji:x[1]}))}
 function save(){try{localStorage.setItem('phonics-adventure-'+unit,JSON.stringify(words))}catch(_){}}
