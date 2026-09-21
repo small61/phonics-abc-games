@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#124559">
+  <title>ABC · Listen & Tap</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ffcc4d'/%3E%3Cpath d='M18 48 29 15h7l11 33h-8l-2-8H27l-2 8zm11-15h6l-3-11z' fill='%23124559'/%3E%3C/svg%3E">
+  <style>
+    :root{--navy:#123f52;--ink:#17313a;--cream:#fffaf0;--yellow:#ffd45c;--coral:#ff725e;--mint:#72d6b5;--blue:#78b9ed;--paper:#fff;--shadow:0 12px 30px #123f5224}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}
+    body{min-height:100svh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);overflow-x:hidden}
+    button,input{font:inherit}
+    button{touch-action:manipulation;cursor:pointer}
+    .app{width:min(100%,920px);min-height:100svh;margin:auto;padding:20px clamp(16px,4vw,38px) 28px;display:flex;flex-direction:column;gap:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .letter{width:58px;height:58px;border-radius:18px;background:var(--yellow);display:grid;place-items:center;font:bold 2.5rem/1 Georgia,serif;color:var(--navy);box-shadow:0 6px 0 #e9af31}
+    h1{font-size:clamp(1.3rem,4vw,2rem);line-height:1.05;margin:0;color:var(--navy)}
+    h1 small{display:block;font:700 .85rem/1.5 inherit;letter-spacing:.08em;text-transform:uppercase;color:#54727d}
+    .icon-btn{border:0;background:#fff;border-radius:16px;width:52px;height:52px;font-size:1.45rem;box-shadow:0 4px 14px #123f5218}
+    .unit-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:#e7f0ef;padding:7px;border-radius:20px}
+    .unit-tab{min-height:52px;border:0;border-radius:15px;background:transparent;color:#58727a;font:bold 1.35rem/1 Georgia,serif}
+    .unit-tab.active{background:#fff;color:var(--navy);box-shadow:0 4px 12px #123f5218}
+    .status{background:var(--navy);color:#fff;border-radius:24px;padding:18px 20px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;box-shadow:var(--shadow)}
+    .prompt{font-size:clamp(1.05rem,3.5vw,1.45rem);font-weight:800;line-height:1.35}
+    .prompt span{color:var(--yellow)}
+    .score{white-space:nowrap;font-weight:800;background:#ffffff1c;border-radius:999px;padding:8px 12px}
+    .listen{display:grid;grid-template-columns:1fr auto;gap:12px}
+    .listen-btn{min-height:74px;border:0;border-radius:22px;background:var(--coral);color:white;box-shadow:0 7px 0 #d84f43;font-size:clamp(1.15rem,4vw,1.55rem);font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px}
+    .listen-btn:active{transform:translateY(4px);box-shadow:0 3px 0 #d84f43}
+    .speed{border:2px solid #d8e2e3;background:#fff;border-radius:20px;min-width:112px;color:var(--navy);font-weight:800;padding:0 16px}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:1}
+    .card{position:relative;border:3px solid transparent;background:var(--paper);border-radius:26px;min-height:170px;padding:16px 10px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--ink);transition:transform .15s,border-color .15s,background .15s}
+    .card:active{transform:scale(.97)}
+    .card .pic{font-size:clamp(3.2rem,12vw,5.5rem);line-height:1;filter:drop-shadow(0 5px 3px #123f5220)}
+    .card .word{font:900 clamp(1.25rem,5vw,2rem)/1.1 Georgia,serif}
+    .card .sound{font-size:.83rem;font-weight:800;color:#69828a}
+    .card.good{border-color:#23aa7d;background:#e8fff7;animation:pop .45s ease}
+    .card.try{border-color:var(--coral);animation:shake .32s ease}
+    @keyframes pop{50%{transform:scale(1.07)}}
+    @keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+    .cheer{height:28px;text-align:center;font-weight:900;color:#16805f;font-size:1.05rem}
+    footer{display:flex;align-items:center;justify-content:center;gap:8px;color:#607980;font-size:.88rem;font-weight:700}
+    dialog{width:min(92vw,560px);border:0;border-radius:26px;padding:0;box-shadow:0 24px 80px #00182066;color:var(--ink)}
+    dialog::backdrop{background:#0d2f3d99;backdrop-filter:blur(3px)}
+    .modal{padding:24px}.modal h2{margin:0 0 6px;color:var(--navy)}.modal p{margin:0 0 18px;color:#597078}
+    .edit-grid{display:grid;gap:12px}.edit-row{display:grid;grid-template-columns:64px 1fr;gap:10px}.edit-row input{min-height:54px;border:2px solid #cfdcde;border-radius:14px;padding:8px 14px;font-size:1.1rem}.emoji{text-align:center;font-size:1.6rem}
+    .modal-actions{display:flex;gap:10px;margin-top:20px}.modal-actions button{min-height:52px;border:0;border-radius:15px;padding:0 20px;font-weight:900}.save{background:var(--navy);color:#fff;flex:1}.reset{background:#edf2f2;color:var(--navy)}
+    :focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+    @media (orientation:landscape) and (max-height:650px){.app{padding-top:10px;gap:10px}.letter{width:46px;height:46px;font-size:2rem}.status{padding:11px 17px}.listen-btn{min-height:58px}.cards{grid-template-columns:repeat(4,1fr)}.card{min-height:150px}.card .pic{font-size:3.8rem}.cheer{height:20px}}
+    @media (max-width:420px){.app{padding-inline:12px}.card{min-height:145px;border-radius:22px}.listen{grid-template-columns:1fr}.speed{min-height:48px}.score{font-size:.88rem}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand"><div class="letter" id="letter" aria-hidden="true">A</div><h1>Listen & Tap<small id="unitTitle">Oxford Phonics · Letter A</small></h1></div>
+      <button class="icon-btn" id="settings" aria-label="编辑单词">⚙️</button>
+    </header>
+
+    <nav class="unit-tabs" aria-label="选择字母">
+      <button class="unit-tab active" data-unit="A" aria-current="page">A</button>
+      <button class="unit-tab" data-unit="B">B</button>
+      <button class="unit-tab" data-unit="C">C</button>
+    </nav>
+
+    <section class="status" aria-live="polite">
+      <div class="prompt" id="prompt">Tap <span>Listen</span>, then choose!</div>
+      <div class="score" id="score">⭐ 0 / 0</div>
+    </section>
+
+    <div class="listen">
+      <button class="listen-btn" id="listen"><span aria-hidden="true">🔊</span> Listen</button>
+      <button class="speed" id="speed" aria-pressed="false">🐢 Slow</button>
+    </div>
+
+    <section class="cards" id="cards" aria-label="选择听到的单词"></section>
+    <div class="cheer" id="cheer" aria-live="assertive"></div>
+    <footer>👂 Listen · 👆 Tap · 🗣️ Say it</footer>
+  </main>
+
+  <dialog id="editor">
+    <form class="modal" method="dialog" id="editForm">
+      <h2>Edit the four words</h2>
+      <p>修改后会保存在这台设备上。</p>
+      <div class="edit-grid" id="editGrid"></div>
+      <div class="modal-actions"><button class="reset" type="button" id="reset">恢复默认</button><button class="save" value="save">保存</button></div>
+    </form>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+      const defaults = {
+        A:[{word:'apple',emoji:'🍎'},{word:'ant',emoji:'🐜'},{word:'alligator',emoji:'🐊'},{word:'ax',emoji:'🪓'}],
+        B:[{word:'bear',emoji:'🐻'},{word:'bird',emoji:'🐦'},{word:'bed',emoji:'🛏️'},{word:'banana',emoji:'🍌'}],
+        C:[{word:'cat',emoji:'🐱'},{word:'cup',emoji:'☕'},{word:'car',emoji:'🚗'},{word:'computer',emoji:'💻'}]
+      };
+      const $ = s => document.querySelector(s);
+      const cardsEl=$('#cards'), promptEl=$('#prompt'), scoreEl=$('#score'), cheerEl=$('#cheer');
+      let activeUnit='A', words=loadWords('A'), target=0, correct=0, rounds=0, slow=true, locked=false;
+      let voices = [];
+
+      function loadWords(unit){
+        try {
+          const saved=JSON.parse(localStorage.getItem('phonics-unit-'+unit.toLowerCase()+'-words'));
+          if(Array.isArray(saved)&&saved.length===4&&saved.every(x=>x.word)) return saved;
+        } catch(_){}
+        return defaults[unit].map(x=>({...x}));
+      }
+      function saveWords(){try{localStorage.setItem('phonics-unit-'+activeUnit.toLowerCase()+'-words',JSON.stringify(words))}catch(_){}}
+      function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+      function render(){
+        cardsEl.innerHTML='';
+        shuffle(words.map((item,index)=>({item,index}))).forEach(({item,index})=>{
+          const b=document.createElement('button'); b.className='card'; b.dataset.index=index;
+          b.setAttribute('aria-label',item.word);
+          b.innerHTML=`<span class="pic" aria-hidden="true">${escapeHtml(item.emoji)}</span><span class="word">${escapeHtml(item.word)}</span><span class="sound">Tap to choose</span>`;
+          b.addEventListener('click',()=>choose(index,b)); cardsEl.appendChild(b);
+        });
+      }
+      function escapeHtml(s){const d=document.createElement('div');d.textContent=String(s);return d.innerHTML}
+      function escapeAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+      function updateScore(){scoreEl.textContent=`⭐ ${correct} / ${rounds}`}
+      function newRound(speakNow=true){
+        target=Math.floor(Math.random()*words.length); locked=false; cheerEl.textContent='';
+        promptEl.innerHTML='Which word do you hear?';
+        document.querySelectorAll('.card').forEach(c=>c.classList.remove('good','try'));
+        if(speakNow) speak(words[target].word);
+      }
+      function choose(index,button){
+        if(locked) return;
+        if(index===target){
+          locked=true; correct++; rounds++; updateScore(); button.classList.add('good');
+          cheerEl.textContent='Great listening! Say it: '+words[target].word+' 👏';
+          speak(words[target].word,()=>setTimeout(()=>newRound(false),750));
+        } else {
+          rounds++; updateScore(); button.classList.remove('try'); void button.offsetWidth; button.classList.add('try');
+          cheerEl.textContent='Try again — listen carefully!'; speak(words[target].word);
+        }
+      }
+      function refreshVoices(){voices=window.speechSynthesis?.getVoices?.()||[]}
+      function bestEnglishVoice(){
+        const english=voices.filter(v=>/^en[-_]/i.test(v.lang));
+        const preferred=/samantha|karen|moira|tessa|serena|ava|female|zira/i;
+        return english.find(v=>preferred.test(v.name)) || english.find(v=>/en-US/i.test(v.lang)) || english[0] || null;
+      }
+      function speak(text,onend){
+        if(!('speechSynthesis' in window)){cheerEl.textContent='此浏览器不支持语音播放';return}
+        speechSynthesis.cancel(); refreshVoices();
+        const u=new SpeechSynthesisUtterance(text); const voice=bestEnglishVoice();
+        if(voice){u.voice=voice;u.lang=voice.lang}else{u.lang='en-US'}
+        u.rate=slow?.72:.93; u.pitch=1.06; u.volume=1;
+        if(onend){let done=false;const finish=()=>{if(!done){done=true;onend()}};u.onend=finish;u.onerror=finish;setTimeout(finish,3000)}
+        speechSynthesis.speak(u);
+      }
+      $('#listen').addEventListener('click',()=>{promptEl.innerHTML='Which word do you hear?';speak(words[target].word)});
+      $('#speed').addEventListener('click',e=>{slow=!slow;e.currentTarget.textContent=slow?'🐢 Slow':'🐇 Normal';e.currentTarget.setAttribute('aria-pressed',String(!slow));speak(words[target].word)});
+      document.querySelectorAll('.unit-tab').forEach(tab=>tab.addEventListener('click',()=>{
+        activeUnit=tab.dataset.unit; words=loadWords(activeUnit); correct=rounds=0; updateScore();
+        $('#letter').textContent=activeUnit; $('#unitTitle').textContent='Oxford Phonics · Letter '+activeUnit;
+        document.querySelectorAll('.unit-tab').forEach(x=>{const on=x===tab;x.classList.toggle('active',on);on?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current')});
+        render();newRound(false);
+      }));
+      function fillEditor(){
+        $('#editGrid').innerHTML=words.map((x,i)=>`<div class="edit-row"><input class="emoji" maxlength="4" aria-label="第 ${i+1} 个图标" value="${escapeAttr(x.emoji)}"><input class="word-input" maxlength="24" autocapitalize="none" spellcheck="false" aria-label="第 ${i+1} 个英文单词" value="${escapeAttr(x.word)}"></div>`).join('');
+      }
+      $('#settings').addEventListener('click',()=>{fillEditor();$('#editor').showModal()});
+      $('#editForm').addEventListener('submit',e=>{
+        if(e.submitter?.value!=='save')return;
+        const rows=[...document.querySelectorAll('.edit-row')];
+        const next=rows.map(r=>({emoji:r.querySelector('.emoji').value.trim()||'🔤',word:r.querySelector('.word-input').value.trim().toLowerCase()}));
+        if(next.some(x=>!x.word)){e.preventDefault();return}
+        words=next;saveWords();correct=rounds=0;updateScore();render();newRound(false);
+      });
+      $('#reset').addEventListener('click',()=>{words=defaults[activeUnit].map(x=>({...x}));fillEditor()});
+      refreshVoices(); if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=refreshVoices;
+      render(); newRound(false);
+    })();
+  </script>
+</body>
+</html>
