@@ -26,3 +26,5 @@
 界面设计参考：Anthropic frontend-design 技能（https://github.com/anthropics/skills/tree/main/skills/frontend-design）。
 
 大小写配对为纯视觉操作：入场、选卡、配错、配对成功均不播放字母读音，隐藏重听按钮。仅听音送信玩法播放字母录音。
+
+听音送信的每张答案卡独立随机显示大写或小写，按字母身份判断答案。每题仍为四个不同字母、一个正确答案，读音及练习范围不变。
