@@ -24,3 +24,5 @@
 - 重开或切换玩法会重置本轮奖励。界面为本地 SVG、CSS 和原生控件，无外部图片或字体请求。
 
 界面设计参考：Anthropic frontend-design 技能（https://github.com/anthropics/skills/tree/main/skills/frontend-design）。
+
+大小写配对为纯视觉操作：入场、选卡、配错、配对成功均不播放字母读音，隐藏重听按钮。仅听音送信玩法播放字母录音。
